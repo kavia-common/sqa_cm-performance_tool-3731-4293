@@ -1,11 +1,15 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
-from typing import Any, Dict, Literal, Optional
+from typing import Any, Literal, Optional, List
+from uuid import UUID
 
 from pydantic import BaseModel, Field
 
 from app.schemas.metrics import CurrentMetrics
+from app.schemas.tests import TestStartAccepted, TestStopAccepted, TestStatus
+from app.schemas.scenarios import Scenario, ScenarioVersion
+from app.schemas.reports import ReportMeta, Accepted
 
 
 class Error(BaseModel):
@@ -68,6 +72,54 @@ class EnvelopeReady(EnvelopeOk):
     """EnvelopeOk specialized for readiness response."""
 
     data: ReadyData = Field(..., description="Readiness status payload.")
+
+
+class EnvelopeTestStartAccepted(EnvelopeOk):
+    """EnvelopeOk specialized for TestStartAccepted."""
+
+    data: TestStartAccepted = Field(..., description="Accepted test start payload.")
+
+
+class EnvelopeTestStopAccepted(EnvelopeOk):
+    """EnvelopeOk specialized for TestStopAccepted."""
+
+    data: TestStopAccepted = Field(..., description="Accepted test stop payload.")
+
+
+class EnvelopeTestStatus(EnvelopeOk):
+    """EnvelopeOk specialized for TestStatus."""
+
+    data: TestStatus = Field(..., description="Test run status payload.")
+
+
+class EnvelopeScenarioList(EnvelopeOk):
+    """EnvelopeOk specialized for listing scenarios."""
+
+    data: List[Scenario] = Field(..., description="List of scenarios.")
+
+
+class EnvelopeScenario(EnvelopeOk):
+    """EnvelopeOk specialized for a single scenario."""
+
+    data: Scenario = Field(..., description="Scenario payload.")
+
+
+class EnvelopeScenarioVersion(EnvelopeOk):
+    """EnvelopeOk specialized for scenario version response (PATCH)."""
+
+    data: ScenarioVersion = Field(..., description="Scenario id and updated version.")
+
+
+class EnvelopeReportMeta(EnvelopeOk):
+    """EnvelopeOk specialized for report metadata."""
+
+    data: ReportMeta = Field(..., description="Report metadata payload.")
+
+
+class EnvelopeAccepted(EnvelopeOk):
+    """EnvelopeOk specialized for Accepted."""
+
+    data: Accepted = Field(..., description="Accepted queued job payload.")
 
 
 # PUBLIC_INTERFACE

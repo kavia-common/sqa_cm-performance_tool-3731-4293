@@ -6,9 +6,27 @@ This folder contains a FastAPI bootstrap for the **SQA_CM Performance Tool** bac
 
 All endpoints are mounted under the `/v1` prefix:
 
+### Metrics
 - `GET /v1/metrics/current` → returns `EnvelopeCurrentMetrics` (placeholder metrics)
+
+### Health
 - `GET /v1/health` → returns `EnvelopeHealth` (placeholder dependency health)
 - `GET /v1/ready` → returns `EnvelopeReady`
+
+### Tests
+- `POST /v1/tests/start` → returns `EnvelopeTestStartAccepted` (test_run_id, state=starting)
+- `POST /v1/tests/stop` → returns `EnvelopeTestStopAccepted` (test_run_id, state=stopping)
+- `GET /v1/tests/{id}` → returns `EnvelopeTestStatus` (pending|running|completed|failed)
+
+### Scenarios
+- `GET /v1/scenarios` → returns `EnvelopeScenarioList`
+- `POST /v1/scenarios` → returns `EnvelopeScenario` (create)
+- `GET /v1/scenarios/{id}` → returns `EnvelopeScenario`
+- `PATCH /v1/scenarios/{id}` → returns `EnvelopeScenarioVersion` (id + new version)
+
+### Reports
+- `GET /v1/reports/latest?testRunId=...` → returns `EnvelopeReportMeta`
+- `POST /v1/reports/export` → returns `EnvelopeAccepted` (export_id, state=queued)
 
 Interactive API docs are available at `/docs` (and OpenAPI JSON at `/openapi.json`).
 
