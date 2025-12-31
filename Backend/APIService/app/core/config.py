@@ -51,6 +51,11 @@ class Settings:
     ws_url: Optional[str]
     api_base: Optional[str]
 
+    # Metrics pipeline configuration
+    metrics_poll_interval_ms: int
+    metrics_cache_hours: int
+    metrics_max_streams: int
+
     # CORS
     cors_allow_origins: List[str]
 
@@ -83,6 +88,21 @@ def get_settings() -> Settings:
     ws_url = os.getenv("REACT_APP_WS_URL")
     api_base = os.getenv("REACT_APP_API_BASE")
 
+    # Metrics: allow either server-specific keys or REACT_APP_* overrides (do not break existing keys).
+    # If a REACT_APP_* key exists, we accept it as an override for parity with the workspace style.
+    metrics_poll_interval_ms = _parse_int(
+        os.getenv("METRICS_POLL_INTERVAL_MS") or os.getenv("REACT_APP_METRICS_POLL_INTERVAL_MS"),
+        default=1000,
+    )
+    metrics_cache_hours = _parse_int(
+        os.getenv("METRICS_CACHE_HOURS") or os.getenv("REACT_APP_METRICS_CACHE_HOURS"),
+        default=24,
+    )
+    metrics_max_streams = _parse_int(
+        os.getenv("METRICS_MAX_STREAMS") or os.getenv("REACT_APP_METRICS_MAX_STREAMS"),
+        default=8,
+    )
+
     # CORS: allow the frontend URL if set; always include common local dev URL.
     origins: List[str] = ["http://localhost:3000"]
     if frontend_url:
@@ -105,5 +125,8 @@ def get_settings() -> Settings:
         backend_url=backend_url,
         ws_url=ws_url,
         api_base=api_base,
+        metrics_poll_interval_ms=metrics_poll_interval_ms,
+        metrics_cache_hours=metrics_cache_hours,
+        metrics_max_streams=metrics_max_streams,
         cors_allow_origins=cors_allow_origins,
     )

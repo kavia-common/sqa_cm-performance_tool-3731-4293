@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
-from typing import Any, Dict, List, Literal, Optional
+from typing import Any, Dict, Literal, Optional
 
 from pydantic import BaseModel, Field
+
+from app.schemas.metrics import CurrentMetrics
 
 
 class Error(BaseModel):
@@ -33,27 +35,6 @@ class EnvelopeError(BaseModel):
     error: Error = Field(..., description="Error payload.")
 
     model_config = {"extra": "forbid"}
-
-
-class CurrentMetrics(BaseModel):
-    """Current aggregated metrics (placeholder shape aligned to spec)."""
-
-    ts: datetime = Field(..., description="Sample timestamp (RFC3339).")
-    rx_gbps: float = Field(..., description="Receive throughput in Gbps.")
-    tx_gbps: float = Field(..., description="Transmit throughput in Gbps.")
-    loss_pct: float = Field(..., description="Packet loss percentage.")
-    error_counters: Dict[str, float] = Field(
-        ...,
-        description="Error counters keyed by error type/name.",
-    )
-    sequence: Optional[int] = Field(
-        default=None,
-        description="Optional monotonically increasing sequence number.",
-    )
-    per_stream: Optional[List[Dict[str, Any]]] = Field(
-        default=None,
-        description="Optional per-stream breakdown (placeholder).",
-    )
 
 
 class HealthData(BaseModel):
